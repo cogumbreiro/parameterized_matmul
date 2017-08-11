@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include <string>
 #include <stdlib.h>
 #include <math.h>
@@ -22,11 +23,19 @@ int main(int argc, char** argv){
   res=posix_memalign((void**)&A,CACHE_ALIGNMENT,m*m*sizeof(float));assert(res==0);
   res=posix_memalign((void**)&B,CACHE_ALIGNMENT,m*m*sizeof(float));assert(res==0);
   res=posix_memalign((void**)&C,CACHE_ALIGNMENT,m*m*sizeof(float));assert(res==0);
-  for(int i=0;i<m*m;i++){A[i]=1.0;B[i]=1.0;C[i]=0.0;}
   
 
 
+
+  for(int i=0;i<m*m;i++){A[i]=1.0;B[i]=1.0;C[i]=0.0;}
   matmul(A,B,C,m);
+  for(int i=0;i<m*m;i++){A[i]=1.0;B[i]=1.0;C[i]=0.0;}
+
+
+  auto start = std::chrono::steady_clock::now();
+  matmul(A,B,C,m);
+  auto finish = std::chrono::steady_clock::now();
+  std::cout<<std::chrono::duration_cast<std::chrono::duration<double> >(finish-start).count() << "\n";
 
   for(int i=0;i<m*m;i++)assert(C[i]==1.0*m);
 
